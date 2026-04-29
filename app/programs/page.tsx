@@ -65,44 +65,7 @@ const programCategories = [
   },
 ]
 
-const accessPathways = [
-  {
-    icon: CircleDollarSign,
-    title: "Subsidized Programs (Cost-Shared Support)",
-    description: "Reduced-cost services through shared funding models.",
-    color: "from-blue-500 to-blue-600",
-  },
-  {
-    icon: School,
-    title: "School-Funded Access (with vendor flexibility)",
-    description: "Access via school budgets with approved vendor choice.",
-    color: "from-orange-500 to-orange-600",
-  },
-  {
-    icon: Handshake,
-    title: "Sponsored / Fully Funded Access",
-    description: "No-cost access supported by donors and partners.",
-    color: "from-emerald-500 to-emerald-600",
-  },
-  {
-    icon: Globe,
-    title: "Service Credit & Voucher Model",
-    description: "Direct allocation of service value for approved programs.",
-    color: "from-violet-500 to-violet-600",
-  },
-  {
-    icon: BarChart3,
-    title: "Priority Access Allocation",
-    description: "Guaranteed support based on eligibility and urgency.",
-    color: "from-amber-500 to-amber-600",
-  },
-  {
-    icon: GraduationCap,
-    title: "Vetted Provider Network",
-    description: "Services delivered by high-quality, verified partners.",
-    color: "from-pink-500 to-pink-600",
-  },
-]
+
 
 export default function ProgramsPage() {
   return (
@@ -172,7 +135,7 @@ export default function ProgramsPage() {
       {/* Funding & Access Overview */}
       <section className="section-padding bg-secondary/30 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-slate-900/[0.02] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <FadeIn>
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-bold mb-6">FUNDING & ACCESS OVERVIEW</h2>
@@ -187,17 +150,10 @@ export default function ProgramsPage() {
           </FadeIn>
 
           <FadeIn delay={0.2}>
-            <div className="bg-background/80 backdrop-blur-xl rounded-[2.5rem] border border-border/50 shadow-2xl overflow-hidden">
-              <div className="p-8 md:p-12 border-b border-border/50 bg-primary/5">
-                <h3 className="text-xl md:text-2xl font-bold flex items-center gap-3">
-                  <Package className="text-primary" />
-                  PROGRAM ACCESS PATHWAYS
-                </h3>
-              </div>
-              
-              <Accordion type="single" collapsible className="w-full">
+            <div className="mt-12 space-y-6">
+              <Accordion type="single" collapsible className="w-full space-y-4">
                 {/* 1. Subsidized Programs */}
-                <AccordionItem value="subsidized" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors">
+                <AccordionItem value="subsidized" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
                   <AccordionTrigger className="hover:no-underline py-6">
                     <div className="flex items-center gap-4 text-left">
                       <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
@@ -262,7 +218,7 @@ export default function ProgramsPage() {
                 </AccordionItem>
 
                 {/* 2. Sponsored / Fully Funded Access */}
-                <AccordionItem value="sponsored" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors">
+                <AccordionItem value="sponsored" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
                   <AccordionTrigger className="hover:no-underline py-6">
                     <div className="flex items-center gap-4 text-left">
                       <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0">
@@ -315,7 +271,7 @@ export default function ProgramsPage() {
                 </AccordionItem>
 
                 {/* 3. School-Funded Access */}
-                <AccordionItem value="school-funded" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors">
+                <AccordionItem value="school-funded" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
                   <AccordionTrigger className="hover:no-underline py-6">
                     <div className="flex items-center gap-4 text-left">
                       <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center shrink-0">
@@ -379,7 +335,7 @@ export default function ProgramsPage() {
                 </AccordionItem>
 
                 {/* 4. EDUCATION SERVICE CREDIT & VOUCHER MODEL */}
-                <AccordionItem value="voucher" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors">
+                <AccordionItem value="voucher" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
                   <AccordionTrigger className="hover:no-underline py-6">
                     <div className="flex items-center gap-4 text-left">
                       <div className="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center shrink-0">
@@ -469,7 +425,7 @@ export default function ProgramsPage() {
                 </AccordionItem>
 
                 {/* 5. VETTED EDUCATION PROVIDER NETWORK */}
-                <AccordionItem value="vetted-network" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors">
+                <AccordionItem value="vetted-network" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
                   <AccordionTrigger className="hover:no-underline py-6">
                     <div className="flex items-center gap-4 text-left">
                       <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
@@ -523,7 +479,7 @@ export default function ProgramsPage() {
                 </AccordionItem>
 
                 {/* 6. GLOBAL LEARNING IMPACT MATCHING */}
-                <AccordionItem value="global-matching" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors">
+                <AccordionItem value="global-matching" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
                   <AccordionTrigger className="hover:no-underline py-6">
                     <div className="flex items-center gap-4 text-left">
                       <div className="w-12 h-12 rounded-xl bg-blue-600/10 flex items-center justify-center shrink-0">
@@ -583,7 +539,7 @@ export default function ProgramsPage() {
                 </AccordionItem>
 
                 {/* 7. PRIORITY ACCESS ALLOCATION */}
-                <AccordionItem value="priority" className="border-none px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors">
+                <AccordionItem value="priority" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
                   <AccordionTrigger className="hover:no-underline py-6">
                     <div className="flex items-center gap-4 text-left">
                       <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center shrink-0">
@@ -804,43 +760,6 @@ export default function ProgramsPage() {
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-accent/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-20">
-            <FadeIn>
-              <h2 className="text-3xl md:text-5xl font-bold mb-6">Program Access Pathways</h2>
-              <div className="h-1.5 w-24 bg-accent mx-auto rounded-full mb-8" />
-            </FadeIn>
-            <FadeIn delay={0.1}>
-              <p className="text-xl text-primary-foreground/80 max-w-3xl mx-auto leading-relaxed">
-                We provide structured access to educational programs through multiple pathways based on funding, eligibility, and partner alignment.
-              </p>
-            </FadeIn>
-          </div>
-
-          {/* Pathways Grid */}
-          <StaggerChildren className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20" staggerDelay={0.05}>
-            {accessPathways.map((pathway, idx) => {
-              const Icon = pathway.icon
-              return (
-                <StaggerItem key={idx}>
-                  <motion.div
-                    className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 transition-all duration-300 h-full flex items-start gap-5 group"
-                    whileHover={{ y: -6, borderColor: "rgba(255,255,255,0.2)" }}
-                  >
-                    <div className={`w-14 h-14 bg-gradient-to-br ${pathway.color} rounded-xl flex items-center justify-center shadow-lg shrink-0 group-hover:scale-110 transition-transform duration-300`}>
-                      <Icon size={24} className="text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-xl mb-2">{pathway.title}</h3>
-                      <p className="text-primary-foreground/70 text-base leading-relaxed">
-                        {pathway.description}
-                      </p>
-                    </div>
-                  </motion.div>
-                </StaggerItem>
-              )
-            })}
-          </StaggerChildren>
-
           {/* Voucher System Card */}
           <ScaleIn>
             <div className="bg-white/10 backdrop-blur-md rounded-[2.5rem] p-8 md:p-16 border border-white/20 shadow-2xl relative overflow-hidden group">
