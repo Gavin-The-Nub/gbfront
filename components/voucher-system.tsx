@@ -9,33 +9,33 @@ import { FadeIn, StaggerChildren, StaggerItem, ScaleIn, MagneticButton } from "@
 const pathways = [
   {
     icon: CircleDollarSign,
-    title: "Subsidized Programs",
+    title: "Subsidized Programs (Cost-Shared Support)",
     color: "from-blue-500 to-blue-600",
   },
   {
-    icon: GraduationCap,
-    title: "Fully Funded Programs",
-    color: "from-emerald-500 to-emerald-600",
-  },
-  {
     icon: School,
-    title: "School-Based Access",
+    title: "School-Funded Access (with vendor flexibility)",
     color: "from-orange-500 to-orange-600",
   },
   {
+    icon: Handshake,
+    title: "Sponsored / Fully Funded Access",
+    color: "from-emerald-500 to-emerald-600",
+  },
+  {
     icon: Globe,
-    title: "Community Access Programs",
+    title: "Service Credit & Voucher Model",
     color: "from-violet-500 to-violet-600",
   },
   {
-    icon: Handshake,
-    title: "Sponsored Access",
-    color: "from-pink-500 to-pink-600",
+    icon: BarChart3,
+    title: "Priority Access Allocation",
+    color: "from-amber-500 to-amber-600",
   },
   {
-    icon: BarChart3,
-    title: "Priority Access",
-    color: "from-amber-500 to-amber-600",
+    icon: GraduationCap,
+    title: "Vetted Provider Network",
+    color: "from-pink-500 to-pink-600",
   },
 ]
 
