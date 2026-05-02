@@ -151,7 +151,7 @@ export default function ProgramsPage() {
 
           <FadeIn delay={0.2}>
             <div className="mt-12 space-y-6">
-              <Accordion type="single" collapsible className="w-full space-y-4">
+              <Accordion type="single" collapsible className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                 {/* 1. Subsidized Programs */}
                 <AccordionItem value="subsidized" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
                   <AccordionTrigger className="hover:no-underline py-6">
@@ -478,67 +478,9 @@ export default function ProgramsPage() {
                   </AccordionContent>
                 </AccordionItem>
 
-                {/* 6. GLOBAL LEARNING IMPACT MATCHING */}
-                <AccordionItem value="global-matching" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
-                  <AccordionTrigger className="hover:no-underline py-6">
-                    <div className="flex items-center gap-4 text-left">
-                      <div className="w-12 h-12 rounded-xl bg-blue-600/10 flex items-center justify-center shrink-0">
-                        <Globe className="text-blue-600" size={24} />
-                      </div>
-                      <div>
-                        <span className="text-xl font-bold block uppercase tracking-tight">Global Learning Impact Matching</span>
-                        <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">International Support Coordination</span>
-                      </div>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-8">
-                    <div className="space-y-8 pt-4">
-                      <p className="text-lg text-foreground/70 leading-relaxed">
-                        Global Bright Futures Foundation may coordinate parallel learning support initiatives in under-resourced international communities through separate vetted education partners.
-                      </p>
-                      
-                      <div className="grid md:grid-cols-2 gap-8">
-                        <div className="bg-blue-50 p-8 rounded-[2rem] border border-blue-100">
-                          <h4 className="font-bold text-blue-700 mb-4 flex items-center gap-2">
-                            <ShieldCheck className="w-5 h-5" /> Safeguard
-                          </h4>
-                          <ul className="space-y-3">
-                            {[
-                              "Local school services remain fully protected",
-                              "Global programs are funded separately",
-                              "No school funds are redirected internationally"
-                            ].map((item, i) => (
-                              <li key={i} className="flex items-center gap-3 text-blue-800 font-bold text-sm">
-                                <div className="w-2 h-2 rounded-full bg-blue-400" />
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div className="space-y-4">
-                          <h4 className="font-bold text-emerald-600 flex items-center gap-2 uppercase text-xs tracking-widest">Benefits</h4>
-                          <ul className="space-y-3">
-                            {[
-                              "Strong CSR and grant alignment",
-                              "Expanded global education impact",
-                              "No disruption to local programs",
-                              "Enhanced partnership value"
-                            ].map((item, i) => (
-                              <li key={i} className="flex items-center gap-3 text-foreground/80">
-                                <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                                  <CheckCircle size={14} className="text-emerald-500" />
-                                </div>
-                                <span className="text-sm font-bold">{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
 
-                {/* 7. PRIORITY ACCESS ALLOCATION */}
+
+                {/* 6. PRIORITY ACCESS ALLOCATION */}
                 <AccordionItem value="priority" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
                   <AccordionTrigger className="hover:no-underline py-6">
                     <div className="flex items-center gap-4 text-left">
@@ -586,6 +528,66 @@ export default function ProgramsPage() {
                               "Equitable student access",
                               "Structured allocation system",
                               "Full accountability in delivery"
+                            ].map((item, i) => (
+                              <li key={i} className="flex items-center gap-3 text-foreground/80">
+                                <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                                  <CheckCircle size={14} className="text-emerald-500" />
+                                </div>
+                                <span className="text-sm font-bold">{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* 7. GLOBAL LEARNING IMPACT MATCHING */}
+                <AccordionItem value="global-matching" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border md:col-span-2">
+                  <AccordionTrigger className="hover:no-underline py-6">
+                    <div className="flex items-center gap-4 text-left">
+                      <div className="w-12 h-12 rounded-xl bg-blue-600/10 flex items-center justify-center shrink-0">
+                        <Globe className="text-blue-600" size={24} />
+                      </div>
+                      <div>
+                        <span className="text-xl font-bold block uppercase tracking-tight">Global Learning Impact Matching</span>
+                        <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">International Support Coordination</span>
+                      </div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-8">
+                    <div className="space-y-8 pt-4">
+                      <p className="text-lg text-foreground/70 leading-relaxed">
+                        Global Bright Futures Foundation may coordinate parallel learning support initiatives in under-resourced international communities through separate vetted education partners.
+                      </p>
+                      
+                      <div className="grid md:grid-cols-2 gap-8">
+                        <div className="bg-blue-50 p-8 rounded-[2rem] border border-blue-100">
+                          <h4 className="font-bold text-blue-700 mb-4 flex items-center gap-2">
+                            <ShieldCheck className="w-5 h-5" /> Safeguard
+                          </h4>
+                          <ul className="space-y-3">
+                            {[
+                              "Local school services remain fully protected",
+                              "Global programs are funded separately",
+                              "No school funds are redirected internationally"
+                            ].map((item, i) => (
+                              <li key={i} className="flex items-center gap-3 text-blue-800 font-bold text-sm">
+                                <div className="w-2 h-2 rounded-full bg-blue-400" />
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="space-y-4">
+                          <h4 className="font-bold text-emerald-600 flex items-center gap-2 uppercase text-xs tracking-widest">Benefits</h4>
+                          <ul className="space-y-3">
+                            {[
+                              "Strong CSR and grant alignment",
+                              "Expanded global education impact",
+                              "No disruption to local programs",
+                              "Enhanced partnership value"
                             ].map((item, i) => (
                               <li key={i} className="flex items-center gap-3 text-foreground/80">
                                 <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center">
