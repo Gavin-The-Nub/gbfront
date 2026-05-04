@@ -318,20 +318,7 @@ export default function AboutPage() {
               </motion.a>
             </div>
           </FadeIn>
-          <FadeIn delay={0.2}>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <MagneticButton>
-                <button className="bg-primary-foreground text-primary px-8 py-4 rounded-full font-bold hover:bg-primary-foreground/90 transition-all duration-300 shadow-lg">
-                  Download Form 990
-                </button>
-              </MagneticButton>
-              <MagneticButton>
-                <button className="border-2 border-primary-foreground/30 text-primary-foreground px-8 py-4 rounded-full font-bold hover:bg-primary-foreground/10 hover:border-primary-foreground/50 transition-all duration-300">
-                  Annual Report
-                </button>
-              </MagneticButton>
-            </div>
-          </FadeIn>
+
         </div>
       </section>
 
