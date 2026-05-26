@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { School, Loader2 } from "lucide-react"
+import { UserPlus, Building, Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 interface SchoolRegistrationFormData {
@@ -78,11 +78,11 @@ export default function SchoolRegistrationForm() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to register school")
+        throw new Error(data.error || "Failed to register")
       }
 
       // Success - redirect or show success message
-      alert("School registration successful! You can now apply for scholarships.")
+      alert("Registration successful! You can now apply for scholarships.")
       router.push("/apply")
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred during registration")
@@ -96,12 +96,12 @@ export default function SchoolRegistrationForm() {
       <CardHeader>
         <div className="flex items-center gap-3">
           <div className="bg-indigo-500/10 rounded-full w-12 h-12 flex items-center justify-center">
-            <School className="text-indigo-600" size={24} />
+            <UserPlus className="text-indigo-600" size={24} />
           </div>
-          <CardTitle className="text-2xl">School Registration</CardTitle>
+          <CardTitle className="text-2xl">Registration</CardTitle>
         </div>
         <p className="text-sm text-foreground/70 mt-2">
-          Register your school to apply for scholarships and programs
+          Register to apply for scholarships and programs
         </p>
       </CardHeader>
       <CardContent>
@@ -127,14 +127,14 @@ export default function SchoolRegistrationForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="schoolName">School Name *</Label>
+              <Label htmlFor="schoolName">School / Organization Name *</Label>
               <Input
                 id="schoolName"
                 name="schoolName"
                 value={formData.schoolName}
                 onChange={handleChange}
                 required
-                placeholder="Your School Name"
+                placeholder="Your School or Organization Name"
               />
             </div>
           </div>
@@ -197,13 +197,13 @@ export default function SchoolRegistrationForm() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="district">School District</Label>
+              <Label htmlFor="district">School District / Area</Label>
               <Input
                 id="district"
                 name="district"
                 value={formData.district}
                 onChange={handleChange}
-                placeholder="School District Name"
+                placeholder="District or Area Name"
               />
             </div>
 
@@ -230,7 +230,7 @@ export default function SchoolRegistrationForm() {
                 Registering...
               </>
             ) : (
-              "Register School"
+              "Register"
             )}
           </Button>
         </form>

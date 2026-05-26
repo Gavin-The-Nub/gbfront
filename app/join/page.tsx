@@ -81,7 +81,7 @@ export default function JoinPage() {
                   <Users2 className="w-5 h-5 md:w-6 md:h-6 mr-3" />Families
                 </TabsTrigger>
                 <TabsTrigger value="educators" className="px-8 py-4 text-lg md:text-xl font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-300 rounded-xl shadow-sm">
-                  <GraduationCap className="w-5 h-5 md:w-6 md:h-6 mr-3" />Educators &amp; Tutors
+                  <GraduationCap className="w-5 h-5 md:w-6 md:h-6 mr-3" />Educators
                 </TabsTrigger>
               </TabsList>
             </div>

@@ -10,8 +10,9 @@ const ic = "w-full px-3 py-2.5 border border-border/50 rounded-lg bg-background 
 const lc = "block text-sm font-semibold mb-1.5 text-foreground/80"
 
 const REDIRECTS: Record<string, { url: string; label: string; email: string }> = {
+  "Student/Families/Educator Support": { url: "https://app.globalbrightfutures.org/auth/signup", label: "Student/Families/Educator Support Portal", email: "families@globalbrightfutures.org" },
   "Vendor Application": { url: "https://app.globalbrightfutures.org/auth/vendor-signup", label: "Sign Up as a Vendor", email: "vendor@globalbrightfutures.org" },
-  "School Partnership": { url: "https://app.globalbrightfutures.org/auth/signup", label: "School Partnership Portal", email: "partnership@globalbrightfutures.org" },
+  "Registration": { url: "https://app.globalbrightfutures.org/auth/signup", label: "Registration Portal", email: "partnership@globalbrightfutures.org" },
 }
 
 function F({ label, id, value, onChange, placeholder, required, type = "text" }: { label: string; id: string; value: string; onChange: (v: string) => void; placeholder?: string; required?: boolean; type?: string }) {
@@ -89,13 +90,13 @@ const init = {
 }
 
 function buildPayload(cat: string, f: typeof init): Record<string, string> {
-  if (cat === "Students & Families Support") return {
+  if (cat === "Student/Families/Educator Support") return {
     "Contact Email": f.email, "Student / Parent Name": f.studentName, "Grade Level": f.gradeLevel,
     "School Name": f.schoolName || "Not provided", "Location": f.location,
     "Primary Needs": f.primaryNeeds.join(", "), "Subjects Needed": f.subjectsNeeded,
     "Internet Access": f.internetAccess, "Device Access": f.deviceAccess, "Support Description": f.supportDescription,
   }
-  if (cat === "Educator and Tutor") return {
+  if (cat === "Educator") return {
     "Full Name": f.fullName, "Email": f.email, "Phone": f.phone, "Location": f.location, "Time Zone": f.timezone,
     "Roles Applied For": f.roles.join(", "), "Legally Eligible": f.legallyEligible, "Gov ID Available": f.govId,
     "Highest Education": f.highestEducation, "Field of Study": f.fieldOfStudy, "Years of Experience": f.yearsExperience,
@@ -135,7 +136,7 @@ export function SmartIntakeHeroCard() {
           <label htmlFor="hero-cat" className={lc}>I am interested in: <span className="text-red-500">*</span></label>
           <select id="hero-cat" value={cat} onChange={e => handleChange(e.target.value)} className={ic}>
             <option value="">Select a category...</option>
-            {["Students & Families Support","Educator and Tutor","Vendor Application","School Partnership","Sponsorship and Corporate Partnership","Program Support Inquiry","General Inquiry"].map(c => (
+            {["Student/Families/Educator Support","Educator","Vendor Application","Registration","Sponsorship and Corporate Partnership","Program Support Inquiry","General Inquiry"].map(c => (
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
@@ -178,7 +179,7 @@ export function SmartIntakeFormSection({ selectedCategory }: { selectedCategory:
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (selectedCategory === "Educator and Tutor" && !f.educatorAck) {
+    if (selectedCategory === "Educator" && !f.educatorAck) {
       toast.error("Please acknowledge the placement terms to continue.")
       return
     }
@@ -222,7 +223,7 @@ export function SmartIntakeFormSection({ selectedCategory }: { selectedCategory:
             <form onSubmit={handleSubmit} className="space-y-5 bg-background border border-border/50 rounded-2xl p-8 shadow-sm">
 
               {/* STUDENTS & FAMILIES */}
-              {selectedCategory === "Students & Families Support" && <>
+              {selectedCategory === "Student/Families/Educator Support" && <>
                 <Sec>Basic Information</Sec>
                 <F label="Student First Name / Parent Name" id="sf-name" value={f.studentName} onChange={v => set("studentName", v)} placeholder="Name" required />
                 <F label="Contact Email (optional)" id="sf-email" type="email" value={f.email} onChange={v => set("email", v)} placeholder="your@email.com" />
@@ -242,8 +243,8 @@ export function SmartIntakeFormSection({ selectedCategory }: { selectedCategory:
                 <T label="Brief description of support needed" id="sf-desc" value={f.supportDescription} onChange={v => set("supportDescription", v)} placeholder="Tell us more about what support you need..." required />
               </>}
 
-              {/* EDUCATOR & TUTOR */}
-              {selectedCategory === "Educator and Tutor" && <>
+              {/* EDUCATOR */}
+              {selectedCategory === "Educator" && <>
                 <Sec>Personal Information</Sec>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <F label="Full Name" id="ed-name" value={f.fullName} onChange={v => set("fullName", v)} placeholder="Your full name" required />
