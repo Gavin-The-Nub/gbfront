@@ -80,8 +80,8 @@ export default function JoinPage() {
                 <TabsTrigger value="families" className="px-8 py-4 text-lg md:text-xl font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-300 rounded-xl shadow-sm">
                   <Users2 className="w-5 h-5 md:w-6 md:h-6 mr-3" />Families
                 </TabsTrigger>
-                <TabsTrigger value="educators" className="px-8 py-4 text-lg md:text-xl font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-300 rounded-xl shadow-sm">
-                  <GraduationCap className="w-5 h-5 md:w-6 md:h-6 mr-3" />Educators
+                <TabsTrigger value="tutors" className="px-8 py-4 text-lg md:text-xl font-bold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-300 rounded-xl shadow-sm">
+                  <GraduationCap className="w-5 h-5 md:w-6 md:h-6 mr-3" />Tutors
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -291,8 +291,8 @@ export default function JoinPage() {
               </div>
             </TabsContent>
 
-            {/* Educators Tab */}
-            <TabsContent value="educators" className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Tutors Tab */}
+            <TabsContent value="tutors" className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div className="bg-secondary/30 p-8 md:p-12 rounded-[2.5rem] order-2 md:order-1">
                   <h3 className="text-2xl font-bold mb-6">Participants receive:</h3>
@@ -307,9 +307,9 @@ export default function JoinPage() {
                 </div>
                 <div className="space-y-6 order-1 md:order-2">
                   <h2 className="text-3xl md:text-4xl font-bold">Build Experience While Making Impact</h2>
-                  <p className="text-lg text-foreground/70 leading-relaxed">We create pathways for educators, students, and graduates to grow professionally through meaningful impact.</p>
-                  <Link href="/contact" className="inline-block">
-                    <Button className="rounded-full px-8 h-12">Join our Educator Network</Button>
+                  <p className="text-lg text-foreground/70 leading-relaxed">We create pathways for tutors, students, and graduates to grow professionally through meaningful impact.</p>
+                  <Link href="https://app.smartbrainlearning.org/tutor/signup" target="_blank" className="inline-block">
+                    <Button className="rounded-full px-8 h-12">Become a Tutor</Button>
                   </Link>
                 </div>
               </div>
@@ -330,7 +330,7 @@ export default function JoinPage() {
             {[
               { icon: Users2, text: "Students gaining academic support" },
               { icon: Briefcase, text: "Tutors gaining workforce experience" },
-              { icon: GraduationCap, text: "Educators receiving professional opportunities" },
+              { icon: GraduationCap, text: "Tutors receiving professional opportunities" },
               { icon: School, text: "Schools expanding access to services" },
               { icon: Globe2, text: "Global communities receiving support" },
             ].map((item, i) => (

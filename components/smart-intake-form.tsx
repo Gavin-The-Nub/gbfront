@@ -12,7 +12,8 @@ const lc = "block text-sm font-semibold mb-1.5 text-foreground/80"
 const REDIRECTS: Record<string, { url: string; label: string; email: string }> = {
   "Student/Families/Educator Support": { url: "https://app.globalbrightfutures.org/auth/signup", label: "Student/Families/Educator Support Portal", email: "families@globalbrightfutures.org" },
   "Vendor Application": { url: "https://app.globalbrightfutures.org/auth/vendor-signup", label: "Sign Up as a Vendor", email: "vendor@globalbrightfutures.org" },
-  "Registration": { url: "https://app.globalbrightfutures.org/auth/signup", label: "Registration Portal", email: "partnership@globalbrightfutures.org" },
+  "School Registration": { url: "https://app.globalbrightfutures.org/auth/signup", label: "School Registration Portal", email: "partnership@globalbrightfutures.org" },
+  "Become a Tutor": { url: "https://app.smartbrainlearning.org/tutor/signup", label: "Become a Tutor Portal", email: "educators@globalbrightfutures.org" },
 }
 
 function F({ label, id, value, onChange, placeholder, required, type = "text" }: { label: string; id: string; value: string; onChange: (v: string) => void; placeholder?: string; required?: boolean; type?: string }) {
@@ -96,7 +97,7 @@ function buildPayload(cat: string, f: typeof init): Record<string, string> {
     "Primary Needs": f.primaryNeeds.join(", "), "Subjects Needed": f.subjectsNeeded,
     "Internet Access": f.internetAccess, "Device Access": f.deviceAccess, "Support Description": f.supportDescription,
   }
-  if (cat === "Educator") return {
+  if (cat === "Become a Tutor") return {
     "Full Name": f.fullName, "Email": f.email, "Phone": f.phone, "Location": f.location, "Time Zone": f.timezone,
     "Roles Applied For": f.roles.join(", "), "Legally Eligible": f.legallyEligible, "Gov ID Available": f.govId,
     "Highest Education": f.highestEducation, "Field of Study": f.fieldOfStudy, "Years of Experience": f.yearsExperience,
@@ -136,7 +137,7 @@ export function SmartIntakeHeroCard() {
           <label htmlFor="hero-cat" className={lc}>I am interested in: <span className="text-red-500">*</span></label>
           <select id="hero-cat" value={cat} onChange={e => handleChange(e.target.value)} className={ic}>
             <option value="">Select a category...</option>
-            {["Student/Families/Educator Support","Educator","Vendor Application","Registration","Sponsorship and Corporate Partnership","Program Support Inquiry","General Inquiry"].map(c => (
+            {["Student/Families/Educator Support","Become a Tutor","Vendor Application","School Registration","Sponsorship and Corporate Partnership","Program Support Inquiry","General Inquiry"].map(c => (
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
@@ -179,7 +180,7 @@ export function SmartIntakeFormSection({ selectedCategory }: { selectedCategory:
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (selectedCategory === "Educator" && !f.educatorAck) {
+    if (selectedCategory === "Become a Tutor" && !f.educatorAck) {
       toast.error("Please acknowledge the placement terms to continue.")
       return
     }
@@ -243,8 +244,8 @@ export function SmartIntakeFormSection({ selectedCategory }: { selectedCategory:
                 <T label="Brief description of support needed" id="sf-desc" value={f.supportDescription} onChange={v => set("supportDescription", v)} placeholder="Tell us more about what support you need..." required />
               </>}
 
-              {/* EDUCATOR */}
-              {selectedCategory === "Educator" && <>
+              {/* TUTOR */}
+              {selectedCategory === "Become a Tutor" && <>
                 <Sec>Personal Information</Sec>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <F label="Full Name" id="ed-name" value={f.fullName} onChange={v => set("fullName", v)} placeholder="Your full name" required />
