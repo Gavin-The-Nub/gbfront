@@ -342,7 +342,7 @@ export default function ProgramsPage() {
                         <CreditCard className="text-violet-500" size={24} />
                       </div>
                       <div>
-                        <span className="text-xl font-bold block uppercase">Education Service Credit & Voucher Model</span>
+                        <span className="text-xl font-bold block">Education Service Credit & Voucher Model</span>
                         <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">Standardized Instructional Units</span>
                       </div>
                     </div>
@@ -432,7 +432,7 @@ export default function ProgramsPage() {
                         <Users className="text-primary" size={24} />
                       </div>
                       <div>
-                        <span className="text-xl font-bold block uppercase tracking-tight">Vetted Education Provider Network</span>
+                        <span className="text-xl font-bold block tracking-tight">Vetted Education Provider Network</span>
                         <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">Quality & Compliance Standards</span>
                       </div>
                     </div>
@@ -488,7 +488,7 @@ export default function ProgramsPage() {
                         <BarChart3 className="text-amber-500" size={24} />
                       </div>
                       <div>
-                        <span className="text-xl font-bold block uppercase tracking-tight">Priority Access Allocation</span>
+                        <span className="text-xl font-bold block tracking-tight">Priority Access Allocation</span>
                         <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">Need-Based Support Distribution</span>
                       </div>
                     </div>
@@ -551,7 +551,7 @@ export default function ProgramsPage() {
                         <Globe className="text-blue-600" size={24} />
                       </div>
                       <div>
-                        <span className="text-xl font-bold block uppercase tracking-tight">Global Learning Impact Matching</span>
+                        <span className="text-xl font-bold block tracking-tight">Global Learning Impact Matching</span>
                         <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">International Support Coordination</span>
                       </div>
                     </div>

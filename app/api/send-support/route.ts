@@ -4,13 +4,13 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const categoryEmailMap: Record<string, string> = {
-  "Student/Families/Educator Support": "families@globalbrightfutures.org",
-  "Become a Tutor": "educators@globalbrightfutures.org",
-  "Vendor Application": "vendor@globalbrightfutures.org",
-  "School Partnership": "partnership@globalbrightfutures.org",
-  "Sponsorship and Corporate Partnership": "partnership@globalbrightfutures.org",
-  "Program Support Inquiry": "support@globalbrightfutures.org",
-  "General Inquiry": "info@globalbrightfutures.org",
+  "Student/Families/Educator Support": "10cursorfarm@gmail.com",
+  "Become a Tutor": "10cursorfarm@gmail.com",
+  "Vendor Application": "10cursorfarm@gmail.com",
+  "School Partnership": "10cursorfarm@gmail.com",
+  "Sponsorship and Corporate Partnership": "10cursorfarm@gmail.com",
+  "Program Support Inquiry": "10cursorfarm@gmail.com",
+  "General Inquiry": "10cursorfarm@gmail.com",
 };
 
 const categoryTagMap: Record<string, string> = {
@@ -58,7 +58,7 @@ export async function POST(req: Request) {
   try {
     const { category, formData, replyToEmail } = await req.json();
 
-    const targetEmail = categoryEmailMap[category] || "info@globalbrightfutures.org";
+    const targetEmail = categoryEmailMap[category] || "10cursorfarm@gmail.com";
     const tag = categoryTagMap[category] || category;
     const htmlBody = buildEmailHtml(category, formData);
     const textBody = Object.entries(formData as Record<string, string>)

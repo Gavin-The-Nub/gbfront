@@ -1,10 +1,12 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { School, GraduationCap, CircleDollarSign, Globe, Handshake, BarChart3 } from "lucide-react"
 import { motion } from "framer-motion"
 import { FadeIn, StaggerChildren, StaggerItem, ScaleIn, MagneticButton } from "@/components/motion"
+import { supabase } from "@/lib/supabase"
 
 const pathways = [
   {
@@ -39,7 +41,34 @@ const pathways = [
   },
 ]
 
+const defaultLandingOptions = ["$500", "$1,000", "$2,000", "$3,000", "Custom"]
+
 export default function VoucherSystem() {
+  const [denominations, setDenominations] = useState<string[]>([])
+
+  useEffect(() => {
+    async function loadDenominations() {
+      try {
+        const { data, error } = await supabase
+          .from("voucher_denominations")
+          .select("label")
+          .eq("show_on_landing", true)
+          .order("sort_order", { ascending: true })
+
+        if (error) throw error
+        if (data && data.length > 0) {
+          setDenominations(data.map((d: any) => d.label))
+        } else {
+          setDenominations(defaultLandingOptions)
+        }
+      } catch (err) {
+        console.error("Error loading denominations in VoucherSystem:", err)
+        setDenominations(defaultLandingOptions)
+      }
+    }
+    loadDenominations()
+  }, [])
+
   return (
     <section className="section-padding bg-primary text-primary-foreground relative overflow-hidden">
       {/* Background decorations */}
@@ -94,7 +123,7 @@ export default function VoucherSystem() {
           <div className="bg-white/10 backdrop-blur-md rounded-3xl p-10 text-center border border-white/20 shadow-xl">
             <h3 className="font-bold text-2xl mb-8">Voucher Denominations</h3>
             <div className="flex flex-wrap justify-center gap-4 mb-8">
-              {["$500", "$1,000", "$2,000", "$3,000", "Custom"].map((amount, idx) => (
+              {denominations.map((amount, idx) => (
                 <motion.div
                   key={idx}
                   className="bg-white text-primary hover:bg-white/90 px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 cursor-default"
