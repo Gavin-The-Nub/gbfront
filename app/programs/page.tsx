@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import Navigation from "@/components/navigation"
 import Footer from "@/components/footer"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,6 +11,7 @@ import { BookOpen, Code2, Heart, Users, GraduationCap, Package, ArrowRight, Scho
 import { motion } from "framer-motion"
 import { FadeIn, TextReveal, StaggerChildren, StaggerItem, MagneticButton, ScaleIn } from "@/components/motion"
 import Image from "next/image"
+import { supabase } from "@/lib/supabase"
 
 
 const programCategories = [
@@ -67,7 +69,235 @@ const programCategories = [
 
 
 
+const IconComponents: Record<string, React.ComponentType<any>> = {
+  BookOpen,
+  Code2,
+  Heart,
+  Users,
+  GraduationCap,
+  Package,
+  ArrowRight,
+  School,
+  Globe,
+  CheckCircle,
+  Briefcase,
+  Apple,
+  Handshake,
+  CreditCard,
+  CircleDollarSign,
+  BarChart3,
+  ShieldCheck,
+}
+
+const STATIC_SECTIONS = [
+  {
+    key: "subsidized",
+    title: "Subsidized Programs (Cost-Shared Support)",
+    tag: "Shared Funding Model",
+    icon: "CircleDollarSign",
+    description: "Schools and GBFF share program costs to expand access while reducing per-student expenses. Programs are delivered through the Support One, Empower Two™ vetted provider network, ensuring consistent instructional quality and standardized delivery.",
+    details: {
+      left_col_title: "Provider Participation Model",
+      left_col_text: "Approved providers operate under a structured service agreement where they:",
+      left_col_bullets: [
+        "Deliver consistent academic support services",
+        "Align with school academic priorities and program requirements",
+        "Participate in scalable, cost-efficient service delivery models",
+        "Support workforce development pathways for educators and tutors",
+        "Expand access for high-need student populations"
+      ],
+      left_col_style: "default",
+      right_col_title: "Benefits",
+      right_col_bullets: [
+        "Lower per-student cost",
+        "Increased student participation",
+        "Flexible school budget usage",
+        "Expanded academic support capacity"
+      ],
+      right_col_style: "default"
+    }
+  },
+  {
+    key: "sponsored",
+    title: "Sponsored / Fully Funded Access",
+    tag: "Grant & Philanthropic Support",
+    icon: "Handshake",
+    description: "Programs may be fully or partially funded through grants, corporate sponsors, or philanthropic partners. GBFF manages funding coordination, compliance, provider assignment, and service delivery oversight.",
+    details: {
+      left_col_title: "Provider Role",
+      left_col_text: "Approved providers deliver services under funded allocations with standardized instructional expectations and reporting requirements.",
+      left_col_bullets: [],
+      left_col_style: "default",
+      right_col_title: "Benefits",
+      right_col_bullets: [
+        "No-cost access when funding is available",
+        "Increased equity for high-need schools",
+        "Expanded program reach",
+        "Reduced financial barriers"
+      ],
+      right_col_style: "default"
+    }
+  },
+  {
+    key: "school-funded",
+    title: "School-Funded Access",
+    tag: "Direct Budget Allocation",
+    icon: "School",
+    description: "Schools may use existing academic support budgets (Title I, intervention, enrichment, tutoring, or related allocations) to access structured services.",
+    details: {
+      left_col_title: "Flexible Vendor Alignment",
+      left_col_text: "Where schools already have existing tutoring or education vendors, GBFF supports integration by:",
+      left_col_bullets: [
+        "Structuring funding within approved academic service categories",
+        "Aligning service delivery to standardized program requirements",
+        "Allowing school-selected vendors to participate if they meet program standards",
+        "Providing optional access to GBFF vetted providers for expanded capacity",
+        "Ensuring consistent reporting and accountability across all providers"
+      ],
+      left_col_style: "indigo-box",
+      right_col_title: "What This Ensures",
+      right_col_bullets: [
+        "Schools retain full control of vendor relationships",
+        "Existing vendor contracts remain valid if aligned",
+        "No disruption to current school systems",
+        "Optional expansion through GBFF provider network"
+      ],
+      right_col_style: "emerald-pills"
+    }
+  },
+  {
+    key: "voucher",
+    title: "Education Service Credit & Voucher Model",
+    tag: "Standardized Instructional Units",
+    icon: "CreditCard",
+    description: "Academic services are delivered through standardized Service Credits, which represent defined instructional units (e.g., tutoring sessions, intervention blocks, enrichment modules).",
+    details: {
+      left_col_title: "Vendor & Voucher Usage Rules",
+      left_col_text: "Service Credits / Vouchers may be used ONLY with:",
+      left_col_bullets: [
+        "GBFF vetted education providers",
+        "School-approved vendors aligned with program standards"
+      ],
+      left_col_style: "default",
+      left_col_extra_box_title: "Safeguards",
+      left_col_extra_box_bullets: [
+        "Not cash or financial instruments",
+        "Not transferable outside program systems",
+        "Used only for approved educational services",
+        "Fully tracked, documented, and reportable"
+      ],
+      left_col_extra_box_style: "red-box",
+      right_col_title: "Payment Structure",
+      right_col_bullets: [
+        "Services are delivered first",
+        "Services are documented and verified",
+        "Payments are issued only after validation",
+        "Rates are pre-approved under program agreements"
+      ],
+      right_col_bullets_numbered: true,
+      right_col_style: "indigo-box",
+      right_col_extra_title: "What This Solves",
+      right_col_extra_bullets: [
+        "Prevents pricing disputes",
+        "Ensures accountability for services delivered",
+        "Aligns with grant and district audit expectations",
+        "Provides clear cost control and transparency"
+      ]
+    }
+  },
+  {
+    key: "vetted-network",
+    title: "Vetted Education Provider Network",
+    tag: "Quality & Compliance Standards",
+    icon: "Users",
+    description: "Global Bright Futures Foundation operates a Support One, Empower Two™ vetted provider network including qualified tutors, educators, and academic support professionals.",
+    details: {
+      left_col_title: "Provider Oversight Standards",
+      left_col_bullets: [
+        "Instructional quality and alignment requirements",
+        "Compliance and service delivery expectations",
+        "Standardized reporting and accountability systems",
+        "Alignment with school academic goals and outcomes"
+      ],
+      left_col_bullets_styled: true,
+      left_col_style: "default",
+      description_extra: "All providers—whether GBFF-approved or school-aligned—operate under structured standards.",
+      right_col_extra_box_title: "Key Clarification",
+      right_col_extra_box_text: "GBFF functions as a program administration and funding coordination entity, ensuring consistency, compliance, and quality across all service delivery pathways.",
+      right_col_extra_box_style: "dashed-box"
+    }
+  },
+  {
+    key: "priority",
+    title: "Priority Access Allocation",
+    tag: "Need-Based Support Distribution",
+    icon: "BarChart3",
+    description: "When demand exceeds capacity, access is allocated based on student academic need, school resource level, funding type, and provider availability.",
+    details: {
+      left_col_title: "Provider Flexibility",
+      left_col_text: "Assignments may include:",
+      left_col_custom_cards: [
+        { title: "GBFF vetted providers", icon: "Users" },
+        { title: "School-approved vendors (if aligned)", icon: "School" }
+      ],
+      left_col_style: "default",
+      right_col_title: "Benefits",
+      right_col_bullets: [
+        "Transparent selection criteria",
+        "Equitable student access",
+        "Structured allocation system",
+        "Full accountability in delivery"
+      ],
+      right_col_style: "default"
+    }
+  },
+  {
+    key: "global-matching",
+    title: "Global Learning Impact Matching",
+    tag: "International Support Coordination",
+    icon: "Globe",
+    description: "Global Bright Futures Foundation may coordinate parallel learning support initiatives in under-resourced international communities through separate vetted education partners.",
+    details: {
+      left_col_extra_box_title: "Safeguard",
+      left_col_extra_box_bullets: [
+        "Local school services remain fully protected",
+        "Global programs are funded separately",
+        "No school funds are redirected internationally"
+      ],
+      left_col_extra_box_style: "blue-box",
+      right_col_title: "Benefits",
+      right_col_bullets: [
+        "Strong CSR and grant alignment",
+        "Expanded global education impact",
+        "No disruption to local programs",
+        "Enhanced partnership value"
+      ],
+      right_col_style: "default"
+    }
+  }
+]
+
 export default function ProgramsPage() {
+  const [sections, setSections] = useState<any[]>(STATIC_SECTIONS)
+
+  useEffect(() => {
+    async function fetchSections() {
+      try {
+        const { data, error } = await supabase
+          .from("funding_access_sections")
+          .select("*")
+          .order("sort_order", { ascending: true })
+        if (error) throw error
+        if (data && data.length > 0) {
+          setSections(data)
+        }
+      } catch (err) {
+        console.error("Failed to load funding overview sections from Supabase, using local static copy:", err)
+      }
+    }
+    fetchSections()
+  }, [])
+
   return (
     <main>
       <Navigation />
@@ -95,7 +325,7 @@ export default function ProgramsPage() {
       {/* Support One, Empower Two */}
       <section className="section-padding bg-background relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-slate-900/[0.02] bg-[center_top_-1px] [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
             <FadeIn>
               <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
@@ -110,7 +340,19 @@ export default function ProgramsPage() {
           <FadeIn delay={0.2}>
             <div className="prose prose-lg max-w-none text-foreground/70 text-center space-y-8 mb-16">
               <p className="text-xl leading-relaxed">
-                Global Bright Futures Foundation delivers structured academic support, educator development, and workforce readiness programs through partnerships with schools, community organizations, and approved education providers.
+                Global Bright Futures Foundation delivers structured academic support, educator development, and workforce readiness programs through partnerships with schools, community organizations, and approved education providers under the Support One, Empower Two™ framework, which serves as the organization’s core system for program design, implementation, and impact.
+              </p>
+              <p className="text-xl leading-relaxed">
+                This system supports five core impact domains: academic support and learning recovery, enrichment and applied learning, workforce and career readiness, educator and mentor development, and community-based learning partnerships. All programs and initiatives are developed within this structure to ensure alignment, consistency, scalability, and measurable outcomes across all service areas.
+              </p>
+              <p className="text-xl leading-relaxed">
+                Programs are delivered through a flexible, modular framework in which each initiative functions as a structured program aligned to one or more impact domains. This allows the organization to maintain a consistent system while adapting programs to meet community, school, and funding partner needs.
+              </p>
+              <p className="text-xl leading-relaxed">
+                Programs may be implemented in multiple formats, including core academic support services, time-bound pilot initiatives, seasonal or enrichment-based learning models, long-term workforce development pathways, and partnership-supported program models.
+              </p>
+              <p className="text-xl leading-relaxed">
+                New and emerging initiatives are integrated within this system as plug-in programs aligned to existing impact domains, without requiring changes to the core organizational framework. This includes flagship or pilot initiatives developed in response to community and partner needs.
               </p>
             </div>
           </FadeIn>
@@ -152,456 +394,247 @@ export default function ProgramsPage() {
           <FadeIn delay={0.2}>
             <div className="mt-12 space-y-6">
               <Accordion type="single" collapsible className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                {/* 1. Subsidized Programs */}
-                <AccordionItem value="subsidized" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
-                  <AccordionTrigger className="hover:no-underline py-6">
-                    <div className="flex items-center gap-4 text-left">
-                      <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
-                        <CircleDollarSign className="text-blue-500" size={24} />
-                      </div>
-                      <div>
-                        <span className="text-xl font-bold block">Subsidized Programs (Cost-Shared Support)</span>
-                        <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">Shared Funding Model</span>
-                      </div>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-8">
-                    <div className="space-y-8 pt-4">
-                      <p className="text-lg text-foreground/70 leading-relaxed">
-                        Schools and GBFF share program costs to expand access while reducing per-student expenses. Programs are delivered through the Support One, Empower Two™ vetted provider network, ensuring consistent instructional quality and standardized delivery.
-                      </p>
-                      
-                      <div className="grid md:grid-cols-2 gap-8">
-                        <div className="space-y-4">
-                          <h4 className="font-bold text-primary flex items-center gap-2">
-                            <CheckCircle size={18} /> Provider Participation Model
-                          </h4>
-                          <p className="text-sm text-foreground/60 mb-2">Approved providers operate under a structured service agreement where they:</p>
-                          <ul className="space-y-3">
-                            {[
-                              "Deliver consistent academic support services",
-                              "Align with school academic priorities and program requirements",
-                              "Participate in scalable, cost-efficient service delivery models",
-                              "Support workforce development pathways for educators and tutors",
-                              "Expand access for high-need student populations"
-                            ].map((item, i) => (
-                              <li key={i} className="flex items-start gap-3 text-foreground/80">
-                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
-                                <span className="text-sm leading-tight">{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div className="space-y-4">
-                          <h4 className="font-bold text-emerald-600 flex items-center gap-2">
-                            <CheckCircle size={18} /> Benefits
-                          </h4>
-                          <ul className="space-y-3">
-                            {[
-                              "Lower per-student cost",
-                              "Increased student participation",
-                              "Flexible school budget usage",
-                              "Expanded academic support capacity"
-                            ].map((item, i) => (
-                              <li key={i} className="flex items-center gap-3 text-foreground/80">
-                                <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                                  <CheckCircle size={12} className="text-emerald-500" />
-                                </div>
-                                <span className="text-sm font-medium">{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-
-                {/* 2. Sponsored / Fully Funded Access */}
-                <AccordionItem value="sponsored" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
-                  <AccordionTrigger className="hover:no-underline py-6">
-                    <div className="flex items-center gap-4 text-left">
-                      <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0">
-                        <Handshake className="text-emerald-500" size={24} />
-                      </div>
-                      <div>
-                        <span className="text-xl font-bold block">Sponsored / Fully Funded Access</span>
-                        <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">Grant & Philanthropic Support</span>
-                      </div>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-8">
-                    <div className="space-y-8 pt-4">
-                      <p className="text-lg text-foreground/70 leading-relaxed">
-                        Programs may be fully or partially funded through grants, corporate sponsors, or philanthropic partners. GBFF manages funding coordination, compliance, provider assignment, and service delivery oversight.
-                      </p>
-                      
-                      <div className="grid md:grid-cols-2 gap-8">
-                        <div className="space-y-4">
-                          <h4 className="font-bold text-primary flex items-center gap-2">
-                            <CheckCircle size={18} /> Provider Role
-                          </h4>
-                          <p className="text-sm text-foreground/80">
-                            Approved providers deliver services under funded allocations with standardized instructional expectations and reporting requirements.
-                          </p>
-                        </div>
-                        <div className="space-y-4">
-                          <h4 className="font-bold text-emerald-600 flex items-center gap-2">
-                            <CheckCircle size={18} /> Benefits
-                          </h4>
-                          <ul className="space-y-3">
-                            {[
-                              "No-cost access when funding is available",
-                              "Increased equity for high-need schools",
-                              "Expanded program reach",
-                              "Reduced financial barriers"
-                            ].map((item, i) => (
-                              <li key={i} className="flex items-center gap-3 text-foreground/80">
-                                <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                                  <CheckCircle size={12} className="text-emerald-500" />
-                                </div>
-                                <span className="text-sm font-medium">{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-
-                {/* 3. School-Funded Access */}
-                <AccordionItem value="school-funded" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
-                  <AccordionTrigger className="hover:no-underline py-6">
-                    <div className="flex items-center gap-4 text-left">
-                      <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center shrink-0">
-                        <School className="text-orange-500" size={24} />
-                      </div>
-                      <div>
-                        <span className="text-xl font-bold block">School-Funded Access</span>
-                        <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">Direct Budget Allocation</span>
-                      </div>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-8">
-                    <div className="space-y-8 pt-4">
-                      <p className="text-lg text-foreground/70 leading-relaxed">
-                        Schools may use existing academic support budgets (Title I, intervention, enrichment, tutoring, or related allocations) to access structured services.
-                      </p>
-                      
-                      <div className="space-y-6">
-                        <div className="bg-secondary/40 p-6 rounded-2xl border border-border/50">
-                          <h4 className="font-bold text-primary flex items-center gap-2 mb-4">
-                            <ArrowRight size={18} className="text-orange-500" /> Flexible Vendor Alignment
-                          </h4>
-                          <p className="text-sm text-foreground/70 mb-4">Where schools already have existing tutoring or education vendors, GBFF supports integration by:</p>
-                          <ul className="grid md:grid-cols-2 gap-x-8 gap-y-3">
-                            {[
-                              "Structuring funding within approved academic service categories",
-                              "Aligning service delivery to standardized program requirements",
-                              "Allowing school-selected vendors to participate if they meet program standards",
-                              "Providing optional access to GBFF vetted providers for expanded capacity",
-                              "Ensuring consistent reporting and accountability across all providers"
-                            ].map((item, i) => (
-                              <li key={i} className="flex items-start gap-3 text-foreground/80">
-                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" />
-                                <span className="text-xs font-medium leading-tight">{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        <div className="space-y-4">
-                          <h4 className="font-bold text-emerald-600 flex items-center gap-2">
-                            <CheckCircle size={18} /> What This Ensures
-                          </h4>
-                          <ul className="grid md:grid-cols-2 gap-4">
-                            {[
-                              "Schools retain full control of vendor relationships",
-                              "Existing vendor contracts remain valid if aligned",
-                              "No disruption to current school systems",
-                              "Optional expansion through GBFF provider network"
-                            ].map((item, i) => (
-                              <li key={i} className="flex items-center gap-3 bg-emerald-500/5 p-3 rounded-xl border border-emerald-500/10">
-                                <CheckCircle size={14} className="text-emerald-500" />
-                                <span className="text-xs font-bold text-emerald-700">{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-
-                {/* 4. EDUCATION SERVICE CREDIT & VOUCHER MODEL */}
-                <AccordionItem value="voucher" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
-                  <AccordionTrigger className="hover:no-underline py-6">
-                    <div className="flex items-center gap-4 text-left">
-                      <div className="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center shrink-0">
-                        <CreditCard className="text-violet-500" size={24} />
-                      </div>
-                      <div>
-                        <span className="text-xl font-bold block">Education Service Credit & Voucher Model</span>
-                        <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">Standardized Instructional Units</span>
-                      </div>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-8">
-                    <div className="space-y-8 pt-4">
-                      <p className="text-lg text-foreground/70 leading-relaxed">
-                        Academic services are delivered through standardized Service Credits, which represent defined instructional units (e.g., tutoring sessions, intervention blocks, enrichment modules).
-                      </p>
-                      
-                      <div className="grid md:grid-cols-2 gap-8">
-                        <div className="space-y-6">
+                {sections.map((sec) => {
+                  const IconComponent = IconComponents[sec.icon] || CircleDollarSign
+                  const details = sec.details || {}
+                  
+                  const leftColBullets = details.left_col_bullets || []
+                  const leftColExtraBullets = details.left_col_extra_box_bullets || []
+                  const leftColCustomCards = details.left_col_custom_cards || []
+                  
+                  const rightColBullets = details.right_col_bullets || []
+                  const rightColExtraBullets = details.right_col_extra_bullets || []
+                  
+                  return (
+                    <AccordionItem 
+                      key={sec.key} 
+                      value={sec.key} 
+                      className={`border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border ${sec.key === 'global-matching' ? 'md:col-span-2' : ''}`}
+                    >
+                      <AccordionTrigger className="hover:no-underline py-6">
+                        <div className="flex items-center gap-4 text-left">
+                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
+                            sec.key === 'subsidized' ? 'bg-blue-500/10 text-blue-500' :
+                            sec.key === 'sponsored' ? 'bg-emerald-500/10 text-emerald-500' :
+                            sec.key === 'school-funded' ? 'bg-orange-500/10 text-orange-500' :
+                            sec.key === 'voucher' ? 'bg-violet-500/10 text-violet-500' :
+                            sec.key === 'vetted-network' ? 'bg-primary/10 text-primary' :
+                            sec.key === 'priority' ? 'bg-amber-500/10 text-amber-500' :
+                            'bg-blue-600/10 text-blue-600'
+                          }`}>
+                            <IconComponent size={24} />
+                          </div>
                           <div>
-                            <h4 className="font-bold text-primary mb-3 uppercase tracking-tight text-sm">Vendor & Voucher Usage Rules</h4>
-                            <p className="text-sm text-foreground/60">Service Credits / Vouchers may be used ONLY with:</p>
-                            <ul className="mt-2 space-y-2">
-                              <li className="flex items-center gap-2 text-sm font-semibold text-foreground/80">
-                                <CheckCircle size={14} className="text-primary" /> GBFF vetted education providers
-                              </li>
-                              <li className="flex items-center gap-2 text-sm font-semibold text-foreground/80">
-                                <CheckCircle size={14} className="text-primary" /> School-approved vendors aligned with program standards
-                              </li>
-                            </ul>
+                            <span className="text-xl font-bold block">{sec.title}</span>
+                            <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">{sec.tag}</span>
                           </div>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="pb-8">
+                        <div className="space-y-8 pt-4">
+                          <p className="text-lg text-foreground/70 leading-relaxed">
+                            {sec.description}
+                          </p>
                           
-                          <div className="bg-red-50 p-6 rounded-2xl border border-red-100">
-                            <h4 className="font-bold text-red-700 mb-3 uppercase tracking-tight text-sm">Safeguards</h4>
-                            <ul className="space-y-2">
-                              {[
-                                "Not cash or financial instruments",
-                                "Not transferable outside program systems",
-                                "Used only for approved educational services",
-                                "Fully tracked, documented, and reportable"
-                              ].map((item, i) => (
-                                <li key={i} className="flex items-center gap-2 text-xs font-bold text-red-600/80">
-                                  <div className="w-1 h-1 rounded-full bg-red-400" /> {item}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-
-                        <div className="space-y-6">
-                          <div className="bg-secondary/40 p-6 rounded-2xl border border-border/50">
-                            <h4 className="font-bold text-primary mb-3 uppercase tracking-tight text-sm">Payment Structure</h4>
-                            <ul className="space-y-3">
-                              {[
-                                "Services are delivered first",
-                                "Services are documented and verified",
-                                "Payments are issued only after validation",
-                                "Rates are pre-approved under program agreements"
-                              ].map((item, i) => (
-                                <li key={i} className="flex items-start gap-3 text-foreground/70">
-                                  <span className="text-primary font-bold">{i+1}.</span>
-                                  <span className="text-xs font-medium">{item}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          <div className="space-y-3">
-                            <h4 className="font-bold text-emerald-600 uppercase tracking-tight text-sm">What This Solves</h4>
-                            <ul className="space-y-2">
-                              {[
-                                "Prevents pricing disputes",
-                                "Ensures accountability for services delivered",
-                                "Aligns with grant and district audit expectations",
-                                "Provides clear cost control and transparency"
-                              ].map((item, i) => (
-                                <li key={i} className="flex items-center gap-2 text-xs font-bold text-emerald-700">
-                                  <CheckCircle size={12} /> {item}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-
-                {/* 5. VETTED EDUCATION PROVIDER NETWORK */}
-                <AccordionItem value="vetted-network" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
-                  <AccordionTrigger className="hover:no-underline py-6">
-                    <div className="flex items-center gap-4 text-left">
-                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                        <Users className="text-primary" size={24} />
-                      </div>
-                      <div>
-                        <span className="text-xl font-bold block tracking-tight">Vetted Education Provider Network</span>
-                        <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">Quality & Compliance Standards</span>
-                      </div>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-8">
-                    <div className="space-y-8 pt-4">
-                      <p className="text-lg text-foreground/70 leading-relaxed">
-                        Global Bright Futures Foundation operates a Support One, Empower Two™ vetted provider network including qualified tutors, educators, and academic support professionals.
-                      </p>
-                      <p className="text-foreground/80 font-medium italic">
-                        All providers—whether GBFF-approved or school-aligned—operate under structured standards.
-                      </p>
-                      
-                      <div className="grid md:grid-cols-2 gap-8">
-                        <div className="space-y-4">
-                          <h4 className="font-bold text-primary flex items-center gap-2 uppercase text-sm tracking-widest">
-                            Provider Oversight Standards
-                          </h4>
-                          <ul className="space-y-3">
-                            {[
-                              "Instructional quality and alignment requirements",
-                              "Compliance and service delivery expectations",
-                              "Standardized reporting and accountability systems",
-                              "Alignment with school academic goals and outcomes"
-                            ].map((item, i) => (
-                              <li key={i} className="flex items-start gap-3 text-foreground/80 bg-secondary/30 p-4 rounded-xl border border-border/50">
-                                <CheckCircle size={16} className="text-primary mt-1" />
-                                <span className="text-sm font-semibold">{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div className="flex items-center">
-                          <div className="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20">
-                            <h4 className="font-bold text-primary mb-4 uppercase text-xs tracking-widest">Key Clarification</h4>
-                            <p className="text-lg font-medium leading-relaxed text-foreground/80">
-                              GBFF functions as a program administration and funding coordination entity, ensuring consistency, compliance, and quality across all service delivery pathways.
+                          {details.description_extra && (
+                            <p className="text-foreground/80 font-medium italic">
+                              {details.description_extra}
                             </p>
+                          )}
+
+                          <div className="grid md:grid-cols-2 gap-8">
+                            {/* Left Column */}
+                            <div className="space-y-4">
+                              {details.left_col_title && details.left_col_style !== 'indigo-box' && (
+                                <h4 className="font-bold text-primary flex items-center gap-2">
+                                  <CheckCircle size={18} /> {details.left_col_title}
+                                </h4>
+                              )}
+                              
+                              {details.left_col_text && details.left_col_style !== 'indigo-box' && (
+                                <p className="text-sm text-foreground/60 mb-2">{details.left_col_text}</p>
+                              )}
+
+                              {leftColBullets.length > 0 && details.left_col_style !== 'indigo-box' && !details.left_col_bullets_styled && (
+                                <ul className="space-y-3">
+                                  {leftColBullets.map((item: string, i: number) => (
+                                    <li key={i} className="flex items-start gap-3 text-foreground/80">
+                                      <div className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${
+                                        sec.key === 'subsidized' ? 'bg-blue-500' :
+                                        sec.key === 'sponsored' ? 'bg-emerald-500' :
+                                        sec.key === 'school-funded' ? 'bg-orange-500' :
+                                        sec.key === 'voucher' ? 'bg-violet-500' :
+                                        'bg-primary'
+                                      }`} />
+                                      <span className="text-sm leading-tight">{item}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+
+                              {/* Left Column Indigo Box Style (Item 3) */}
+                              {details.left_col_style === 'indigo-box' && (
+                                <div className="bg-secondary/40 p-6 rounded-2xl border border-border/50">
+                                  <h4 className="font-bold text-primary flex items-center gap-2 mb-4">
+                                    <ArrowRight size={18} className="text-orange-500" /> {details.left_col_title}
+                                  </h4>
+                                  {details.left_col_text && (
+                                    <p className="text-sm text-foreground/70 mb-4">{details.left_col_text}</p>
+                                  )}
+                                  <ul className="grid md:grid-cols-2 gap-x-8 gap-y-3">
+                                    {leftColBullets.map((item: string, i: number) => (
+                                      <li key={i} className="flex items-start gap-3 text-foreground/80">
+                                        <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" />
+                                        <span className="text-xs font-medium leading-tight">{item}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {/* Left Column Styled Bullets (Item 5) */}
+                              {details.left_col_bullets_styled && (
+                                <ul className="space-y-3">
+                                  {leftColBullets.map((item: string, i: number) => (
+                                    <li key={i} className="flex items-start gap-3 text-foreground/80 bg-secondary/30 p-4 rounded-xl border border-border/50">
+                                      <CheckCircle size={16} className="text-primary mt-1" />
+                                      <span className="text-sm font-semibold">{item}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+
+                              {/* Left Column Styled Custom Cards (Item 6) */}
+                              {leftColCustomCards.length > 0 && (
+                                <ul className="space-y-3">
+                                  {leftColCustomCards.map((card: any, i: number) => {
+                                    const CardIcon = IconComponents[card.icon] || Users
+                                    return (
+                                      <li key={i} className="flex items-center gap-3 p-4 bg-background rounded-xl border border-border/50 shadow-sm">
+                                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                          <CardIcon size={16} className="text-primary" />
+                                        </div>
+                                        <span className="text-sm font-bold">{card.title}</span>
+                                      </li>
+                                    )
+                                  })}
+                                </ul>
+                              )}
+
+                              {/* Left Column Extra Box (Item 4 Safeguards, Item 7 Safeguard) */}
+                              {details.left_col_extra_box_title && (
+                                <div className={`p-6 rounded-2xl border ${
+                                  details.left_col_extra_box_style === 'red-box' ? 'bg-red-50 border-red-100 text-red-700' :
+                                  details.left_col_extra_box_style === 'blue-box' ? 'bg-blue-50 border-blue-100 text-blue-800' :
+                                  'bg-secondary/40 border-border/50'
+                                }`}>
+                                  <h4 className="font-bold mb-3 uppercase tracking-tight text-sm flex items-center gap-2">
+                                    {sec.key === 'global-matching' && <ShieldCheck className="w-5 h-5" />}
+                                    {details.left_col_extra_box_title}
+                                  </h4>
+                                  <ul className="space-y-2">
+                                    {leftColExtraBullets.map((item: string, i: number) => (
+                                      <li key={i} className="flex items-center gap-2 text-xs font-bold">
+                                        <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                                          details.left_col_extra_box_style === 'red-box' ? 'bg-red-400' :
+                                          details.left_col_extra_box_style === 'blue-box' ? 'bg-blue-400' :
+                                          'bg-primary'
+                                        }`} />
+                                        {item}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Right Column */}
+                            <div className="space-y-4">
+                              {details.right_col_title && details.right_col_style !== 'indigo-box' && (
+                                <h4 className={`font-bold flex items-center gap-2 ${
+                                  sec.key === 'sponsored' ? 'text-emerald-600' :
+                                  sec.key === 'school-funded' ? 'text-emerald-600' :
+                                  sec.key === 'voucher' ? 'text-primary' :
+                                  sec.key === 'global-matching' ? 'text-emerald-600' :
+                                  'text-emerald-600'
+                                }`}>
+                                  <CheckCircle size={18} /> {details.right_col_title}
+                                </h4>
+                              )}
+
+                              {details.right_col_text && (
+                                <p className="text-sm text-foreground/60 mb-2">{details.right_col_text}</p>
+                              )}
+
+                              {/* Right Column Bullets Default */}
+                              {rightColBullets.length > 0 && details.right_col_style === 'default' && (
+                                <ul className="space-y-3">
+                                  {rightColBullets.map((item: string, i: number) => (
+                                    <li key={i} className="flex items-center gap-3 text-foreground/80">
+                                      <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
+                                        <CheckCircle size={12} className="text-emerald-500" />
+                                      </div>
+                                      <span className="text-sm font-medium">{item}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+
+                              {/* Right Column Bullets Emerald Pills (Item 3) */}
+                              {details.right_col_style === 'emerald-pills' && (
+                                <ul className="grid md:grid-cols-2 gap-4">
+                                  {rightColBullets.map((item: string, i: number) => (
+                                    <li key={i} className="flex items-center gap-3 bg-emerald-500/5 p-3 rounded-xl border border-emerald-500/10">
+                                      <CheckCircle size={14} className="text-emerald-500" />
+                                      <span className="text-xs font-bold text-emerald-700">{item}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+
+                              {/* Right Column Bullets Indigo Box (Item 4 Payment Structure) */}
+                              {details.right_col_style === 'indigo-box' && (
+                                <div className="bg-secondary/40 p-6 rounded-2xl border border-border/50">
+                                  <h4 className="font-bold text-primary mb-3 uppercase tracking-tight text-sm">{details.right_col_title}</h4>
+                                  <ul className="space-y-3">
+                                    {rightColBullets.map((item: string, i: number) => (
+                                      <li key={i} className="flex items-start gap-3 text-foreground/70">
+                                        <span className="text-primary font-bold">{i + 1}.</span>
+                                        <span className="text-xs font-medium">{item}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {/* Right Column Extra List (Item 4 What this solves) */}
+                              {details.right_col_extra_title && (
+                                <div className="space-y-3">
+                                  <h4 className="font-bold text-emerald-600 uppercase tracking-tight text-sm">{details.right_col_extra_title}</h4>
+                                  <ul className="space-y-2">
+                                    {rightColExtraBullets.map((item: string, i: number) => (
+                                      <li key={i} className="flex items-center gap-2 text-xs font-bold text-emerald-700">
+                                        <CheckCircle size={12} /> {item}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {/* Right Column Extra Highlight Box (Item 5 Key Clarification) */}
+                              {details.right_col_extra_box_title && (
+                                <div className="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20">
+                                  <h4 className="font-bold text-primary mb-4 uppercase text-xs tracking-widest">{details.right_col_extra_box_title}</h4>
+                                  <p className="text-lg font-medium leading-relaxed text-foreground/80">{details.right_col_extra_box_text}</p>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-
-
-
-                {/* 6. PRIORITY ACCESS ALLOCATION */}
-                <AccordionItem value="priority" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border">
-                  <AccordionTrigger className="hover:no-underline py-6">
-                    <div className="flex items-center gap-4 text-left">
-                      <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center shrink-0">
-                        <BarChart3 className="text-amber-500" size={24} />
-                      </div>
-                      <div>
-                        <span className="text-xl font-bold block tracking-tight">Priority Access Allocation</span>
-                        <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">Need-Based Support Distribution</span>
-                      </div>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-8">
-                    <div className="space-y-8 pt-4">
-                      <p className="text-lg text-foreground/70 leading-relaxed">
-                        When demand exceeds capacity, access is allocated based on student academic need, school resource level, funding type, and provider availability.
-                      </p>
-                      
-                      <div className="grid md:grid-cols-2 gap-8">
-                        <div className="space-y-4">
-                          <h4 className="font-bold text-primary flex items-center gap-2 uppercase text-xs tracking-widest">
-                            Provider Flexibility
-                          </h4>
-                          <p className="text-sm text-foreground/60 font-medium">Assignments may include:</p>
-                          <ul className="space-y-3">
-                            <li className="flex items-center gap-3 p-4 bg-background rounded-xl border border-border/50 shadow-sm">
-                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                                <Users size={16} className="text-primary" />
-                              </div>
-                              <span className="text-sm font-bold">GBFF vetted providers</span>
-                            </li>
-                            <li className="flex items-center gap-3 p-4 bg-background rounded-xl border border-border/50 shadow-sm">
-                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                                <School size={16} className="text-primary" />
-                              </div>
-                              <span className="text-sm font-bold">School-approved vendors (if aligned)</span>
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="space-y-4">
-                          <h4 className="font-bold text-emerald-600 flex items-center gap-2 uppercase text-xs tracking-widest">Benefits</h4>
-                          <ul className="space-y-3">
-                            {[
-                              "Transparent selection criteria",
-                              "Equitable student access",
-                              "Structured allocation system",
-                              "Full accountability in delivery"
-                            ].map((item, i) => (
-                              <li key={i} className="flex items-center gap-3 text-foreground/80">
-                                <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                                  <CheckCircle size={14} className="text-emerald-500" />
-                                </div>
-                                <span className="text-sm font-bold">{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-
-                {/* 7. GLOBAL LEARNING IMPACT MATCHING */}
-                <AccordionItem value="global-matching" className="border-border/50 px-8 md:px-12 py-2 hover:bg-primary/5 transition-colors rounded-2xl bg-background shadow-sm border md:col-span-2">
-                  <AccordionTrigger className="hover:no-underline py-6">
-                    <div className="flex items-center gap-4 text-left">
-                      <div className="w-12 h-12 rounded-xl bg-blue-600/10 flex items-center justify-center shrink-0">
-                        <Globe className="text-blue-600" size={24} />
-                      </div>
-                      <div>
-                        <span className="text-xl font-bold block tracking-tight">Global Learning Impact Matching</span>
-                        <span className="text-sm text-foreground/50 font-medium uppercase tracking-wider">International Support Coordination</span>
-                      </div>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-8">
-                    <div className="space-y-8 pt-4">
-                      <p className="text-lg text-foreground/70 leading-relaxed">
-                        Global Bright Futures Foundation may coordinate parallel learning support initiatives in under-resourced international communities through separate vetted education partners.
-                      </p>
-                      
-                      <div className="grid md:grid-cols-2 gap-8">
-                        <div className="bg-blue-50 p-8 rounded-[2rem] border border-blue-100">
-                          <h4 className="font-bold text-blue-700 mb-4 flex items-center gap-2">
-                            <ShieldCheck className="w-5 h-5" /> Safeguard
-                          </h4>
-                          <ul className="space-y-3">
-                            {[
-                              "Local school services remain fully protected",
-                              "Global programs are funded separately",
-                              "No school funds are redirected internationally"
-                            ].map((item, i) => (
-                              <li key={i} className="flex items-center gap-3 text-blue-800 font-bold text-sm">
-                                <div className="w-2 h-2 rounded-full bg-blue-400" />
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div className="space-y-4">
-                          <h4 className="font-bold text-emerald-600 flex items-center gap-2 uppercase text-xs tracking-widest">Benefits</h4>
-                          <ul className="space-y-3">
-                            {[
-                              "Strong CSR and grant alignment",
-                              "Expanded global education impact",
-                              "No disruption to local programs",
-                              "Enhanced partnership value"
-                            ].map((item, i) => (
-                              <li key={i} className="flex items-center gap-3 text-foreground/80">
-                                <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                                  <CheckCircle size={14} className="text-emerald-500" />
-                                </div>
-                                <span className="text-sm font-bold">{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
+                      </AccordionContent>
+                    </AccordionItem>
+                  )
+                })}
               </Accordion>
             </div>
           </FadeIn>

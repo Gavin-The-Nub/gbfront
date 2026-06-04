@@ -4,7 +4,7 @@ import { FadeIn, StaggerChildren, StaggerItem, CountUp, DrawLine } from "@/compo
 import Image from "next/image"
 
 const stats = [
-  { prefix: "5,000–", value: 10000, suffix: "+", text: "students annually supported through partner-delivered academic programs" },
+  { prefix: "1,000–", value: 5000, suffix: "+", text: "students annually supported through partner-delivered academic programs" },
   { prefix: "150–", value: 300, suffix: "", text: "educators, tutors, youth, and college-level participants engaged in structured roles" },
   { prefix: "10–", value: 25, suffix: "", text: "school and community partnerships across regional and international under-resourced communities" },
 ]
@@ -15,7 +15,7 @@ export default function ImpactSection() {
     <section className="section-padding bg-background relative overflow-hidden">
       {/* Subtle background decoration */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/[0.03] rounded-full blur-3xl pointer-events-none" />
-      
+
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <FadeIn delay={0.1}>
@@ -35,7 +35,7 @@ export default function ImpactSection() {
           </FadeIn>
           <DrawLine className="w-16 h-0.5 bg-accent mx-auto mt-8" delay={0.4} />
         </div>
-        
+
         <StaggerChildren className="grid md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-8 mb-24" staggerDelay={0.15}>
           {stats.map((stat, idx) => (
             <StaggerItem key={idx}>
