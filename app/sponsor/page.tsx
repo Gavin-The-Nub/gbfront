@@ -5,6 +5,7 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Script from "next/script";
 import {
   Heart,
   Globe2,
@@ -25,7 +26,7 @@ const suggestedAmounts = [25, 50, 100, 200, 500, 1000];
 
 const ZEFFY_FORM_URL =
   process.env.NEXT_PUBLIC_ZEFFY_FORM_URL ||
-  "https://www.zeffy.com/en-US/donation-form/donate-to-make-a-difference-21717";
+  "https://www.zeffy.com/en-US/donation-form/support-student-success-through-global-bright-futures-foundation";
 
 export default function SponsorPage() {
   const heroRef = useRef<HTMLElement>(null);
@@ -49,10 +50,10 @@ export default function SponsorPage() {
         window.open(url.toString(), "_blank");
       } catch (error) {
         console.error("Invalid Zeffy form URL:", error);
-        window.open("https://www.zeffy.com/en-US/donation-form/donate-to-make-a-difference-21717", "_blank");
+        window.open("https://www.zeffy.com/en-US/donation-form/support-student-success-through-global-bright-futures-foundation", "_blank");
       }
     } else {
-      window.open("https://www.zeffy.com/en-US/donation-form/donate-to-make-a-difference-21717", "_blank");
+      window.open("https://www.zeffy.com/en-US/donation-form/support-student-success-through-global-bright-futures-foundation", "_blank");
     }
   };
 
@@ -97,13 +98,33 @@ export default function SponsorPage() {
           </FadeIn>
           <FadeIn delay={0.7} className="w-full max-w-2xl mx-auto mt-4">
             <div className="relative overflow-hidden h-[600px] w-full rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl">
-              <iframe 
-                title='Donation form powered by Zeffy' 
-                className="absolute inset-0 w-full h-full border-0"
-                src='https://www.zeffy.com/embed/donation-form/donate-to-make-a-difference-21717' 
-                {...({ allowPaymentRequest: true } as any)}
-                allowTransparency={true}
-                scrolling="no"
+              <div 
+                data-zeffy-embed 
+                data-form-url="/embed/donation-form/support-student-success-through-global-bright-futures-foundation"
+                style={{ width: "100%", height: "100%" }}
+              />
+              <div data-zeffy-embed-fallback style={{ display: "none" }}>
+                <div style={{ position: "relative", overflow: "hidden", height: "600px", width: "100%" }}>
+                  <iframe 
+                    title='Donation form powered by Zeffy' 
+                    style={{ position: "absolute", border: 0, top: 0, left: 0, bottom: 0, right: 0, width: "100%", height: "100%" }}
+                    data-zeffy-embed-src='https://www.zeffy.com/embed/donation-form/support-student-success-through-global-bright-futures-foundation' 
+                    {...({ allowPaymentRequest: true } as any)}
+                    allowTransparency={true}
+                  />
+                </div>
+              </div>
+              <Script
+                src="https://www.zeffy.com/embed/v2/zeffy-embed.js"
+                strategy="lazyOnload"
+                onError={() => {
+                  document.querySelectorAll('[data-zeffy-embed-fallback]').forEach((el: any) => {
+                    el.style.display = 'block';
+                    el.querySelectorAll('iframe[data-zeffy-embed-src]').forEach((f: any) => {
+                      f.src = f.getAttribute('data-zeffy-embed-src');
+                    });
+                  });
+                }}
               />
             </div>
           </FadeIn>
